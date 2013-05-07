@@ -37,3 +37,14 @@ unpackB :: IO (Maybe ByteString) -> IO (Maybe [Word8])
 unpackB x = x >>= (\c -> case c of
                                 Nothing -> return Nothing -- Is return necesary? I don't believe so...
                                 Just x -> return (Just (unpack x)))
+
+processImage :: IO(Maybe [Word8]) -> IO(Maybe [Integer])
+processImage = fmap (fmap processing)
+    where
+        processing :: [Word8] -> [Integer]
+        processing (255:255:255:xs) = 0 : processing xs
+        processing (0:0:0:xs)       = 1 : processing xs
+        processing _                = []
+
+getSample :: String -> IO(Maybe [Integer])
+getSample = processImage . unpackB . getByteStringFromFile
