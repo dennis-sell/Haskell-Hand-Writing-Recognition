@@ -23,14 +23,20 @@ getFileNames p s  = [(letter,  name ++ (letter : set : ".bmp")) |
         names DR = ["Dennis/d", "Richie/r"]
 
 
-mapSnd :: (b -> c) -> (a,b) -> (a,c)
-mapSnd f (fir,sec) = (fir, f sec) 
+mapBoth :: (a -> c) -> (b -> d) -> (a,b) -> (c,d)
+mapBoth f g (fir,sec) = (f fir, g sec) 
 
-getSamples :: Person -> Integer -> [(Char, IO(Maybe [Integer]) )]
-getSamples p i = map (mapSnd getSample) files
+charToVector :: Char -> [Double]
+charToVector c = (replicate (numLetter - 1) 0) ++ [1] ++ (replicate (26 - numLetter) 0)
+    where
+        numLetter = Data.Char.ord c - 96 
+
+getSamples :: Person -> Integer -> [([Double], IO(Maybe [Double]) )]
+getSamples p i = map (mapBoth charToVector getSample) files
     where files = getFileNames p i
 
 {-
 main :: IO ()
 main = do
-    getSamples D 1 -}
+    n <- createNetwork 256 [2560] 26
+    putStrLn "Done" -}

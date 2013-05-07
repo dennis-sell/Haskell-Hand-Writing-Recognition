@@ -34,17 +34,19 @@ getByteStringFromFile x = (getRightM . readBMP $ x) >>= (\c -> case c of
 
 
 unpackB :: IO (Maybe ByteString) -> IO (Maybe [Word8])
-unpackB x = x >>= (\c -> case c of
+unpackB = fmap (fmap unpack)
+{-unpackB x = x >>= (\c -> case c of
                                 Nothing -> return Nothing -- Is return necesary? I don't believe so...
-                                Just x -> return (Just (unpack x)))
+                                Just x -> return (Just (unpack x))) -}
 
-processImage :: IO(Maybe [Word8]) -> IO(Maybe [Integer])
+processImage :: IO(Maybe [Word8]) -> IO(Maybe [Double])
 processImage = fmap (fmap processing)
     where
-        processing :: [Word8] -> [Integer]
+        processing :: [Word8] -> [Double]
         processing (255:255:255:xs) = 0 : processing xs
         processing (0:0:0:xs)       = 1 : processing xs
         processing _                = []
 
-getSample :: String -> IO(Maybe [Integer])
+getSample :: String -> IO(Maybe [Double])
 getSample = processImage . unpackB . getByteStringFromFile
+
