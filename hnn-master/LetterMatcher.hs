@@ -23,7 +23,11 @@ getFileNames p s  = [(letter,  name ++ (letter : set : ".bmp")) |
         names DR = ["Dennis/d", "Richie/r"]
 
 
-getSamples :: [String] -> [IO(Maybe [Word8])]
-getSamples xs = map (unpackB . getByteStringFromFile) xs
+mapSnd :: (b -> c) -> (a,b) -> (a,c)
+mapSnd f (fir,sec) = (fir, f sec) 
+
+getSamples :: Person -> Integer -> [(Char, IO(Maybe [Word8]) )]
+getSamples p i = map (mapSnd (unpackB . getByteStringFromFile)) files
+    where files = getFileNames p i 
 
 
