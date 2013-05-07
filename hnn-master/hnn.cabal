@@ -1,0 +1,41 @@
+name:                hnn
+version:             0.2.0.0
+synopsis:            A fast and simple neural network library
+description:         
+    .
+    A neural network library implemented (for now) purely in Haskell, relying on the excellent
+    hmatrix library.
+    .
+    This library provides a straight and simple feed-forward neural networks implementation which
+    is way better than the one in the first version of hnn.
+    .
+    If you're interested in the feedforward neural networks, please read the mini-tutorial on
+    'AI.HNN.FF.Network'.
+    .
+    TODO -> write about recurrent nets when they're implemented, and add one or two usage examples.
+    .
+homepage:            http://github.com/alpmestan/hnn
+bug-reports:         http://github.com/alpmestan/hnn/issues
+license:             BSD3
+license-file:        LICENSE
+author:              Alp Mestanogullari <alpmestan@gmail.com>, Gatlin Johnson <rokenrol@gmail.com>
+maintainer:          Alp Mestanogullari <alpmestan@gmail.com>
+-- copyright:
+category:            AI
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  exposed-modules:     AI.HNN.FF.Network
+                       -- AI.HNN.Recurrent.Network
+  build-depends:       base >= 4 && < 5,
+                       vector,
+                       mwc-random,
+                       hmatrix,
+                       random,
+                       vector-binary-instances >= 0.2,
+                       binary,
+                       zlib,
+                       bytestring
+  ghc-options:         -O2 -funbox-strict-fields -Wall
+  ghc-prof-options:    -O2 -funbox-strict-fields -Wall -prof -auto-all -rtsopts
