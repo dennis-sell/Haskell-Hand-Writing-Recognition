@@ -10,6 +10,7 @@ import Data.Word
 data Person = D
             | R
             | DR
+          deriving Show
 
 stringToPerson :: String -> Maybe Person
 stringToPerson s
@@ -29,6 +30,15 @@ getFileNames p s  = [(name ++ (letter : set : ".bmp"), letter) |
         names R = ["Richie/r"]
         names DR = ["Dennis/d", "Richie/r"]
 
+getFileNamesStyle :: Integer -> [(String, Person)]
+getFileNamesStyle s  = [("Dennis/d" ++ (letter : set : ".bmp"), D) |
+                            set <- sets, letter <- chars] ++ 
+                       [("Richie/r" ++ (letter : set : ".bmp"), R) |
+                            set <- sets, letter <- chars]
+    where
+        sets = map (chr . fromIntegral . (+48)) [1..s]
+        chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m']
+             ++ ['n','o','p','q','r','s','t','u','v','w','x','y','z']
 
 mapBoth :: (a -> c) -> (b -> d) -> (a,b) -> (c,d)
 mapBoth f g (fir,sec) = (f fir, g sec) 
@@ -38,9 +48,18 @@ charToVector c = (replicate (numLetter - 1) 0) ++ [1] ++ (replicate (26 - numLet
     where
         numLetter = Data.Char.ord c - 96 
 
+personToVector :: Person -> [Double]
+personToVector D = [1,0]
+personToVector R = [0,1]
+personToVector _ = [0,0]
+
 getSamples :: Person -> Integer -> [(IO(Maybe [Double]), [Double] )]
 getSamples p i = map (mapBoth getSample charToVector) files
     where files = getFileNames p i
+
+getStyleSamples :: Integer -> [(IO(Maybe [Double]), [Double] )]
+getStyleSamples i = map (mapBoth getSample personToVector) files
+    where files = getFileNamesStyle i
 
 
 main :: IO ()
