@@ -18,8 +18,8 @@ stringToPerson s
             | s == "DR" = Just DR
             | otherwise = Nothing
 
-getFileNames :: Person -> Integer -> [(Char,String)]
-getFileNames p s  = [(letter,  name ++ (letter : set : ".bmp")) |
+getFileNames :: Person -> Integer -> [(String, Char)]
+getFileNames p s  = [(name ++ (letter : set : ".bmp"), letter) |
                             name <- names p, set <- sets, letter <- chars]
     where
         sets = map (chr . fromIntegral . (+48)) [1..s]
@@ -38,8 +38,8 @@ charToVector c = (replicate (numLetter - 1) 0) ++ [1] ++ (replicate (26 - numLet
     where
         numLetter = Data.Char.ord c - 96 
 
-getSamples :: Person -> Integer -> [([Double], IO(Maybe [Double]) )]
-getSamples p i = map (mapBoth charToVector getSample) files
+getSamples :: Person -> Integer -> [(IO(Maybe [Double]), [Double] )]
+getSamples p i = map (mapBoth getSample charToVector) files
     where files = getFileNames p i
 
 
