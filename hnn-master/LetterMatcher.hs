@@ -4,6 +4,7 @@ import Codec.BMP
 import Control.Monad
 import Data.Char
 import Data.String
+import qualified Data.Vector as V
 --import Data.ByteString
 import Data.Word
 import Data.Maybe
@@ -68,15 +69,15 @@ getStyleSamples = map (mapBoth getSample personToVector)
 
 -------------- Processing ----------------------------------------------------
 
-{-
+
 processSamples :: [(IO(Maybe [Double]), [Double] )] -> IO(Samples Double)
-processSamples = sequence . fromJust . filter isJust . map helper
+processSamples = sequence . map (helper2 . helper)
     where
-      helper :: (IO(Maybe [Double]), [Double] ) -> Maybe IO(Sample Double)
-      helper (picInfo, expected) = if isJust picInfo then return (fromList picInfo, fromList expected) else Nothing >>= \info -> 
-                        case info of
-                          Nothing -> helper xs
-                          Just p  -> return (fromList p, fromList expected) : helper xs -}
+      helper :: (IO(Maybe [Double]), [Double] ) -> (IO(Vector Double), Vector Double)
+      helper s = mapBoth (fmap (fromList . fromJust)) fromList s
+                                                    -- IO(Sample Double) = IO((Vector Double, Vector Double))
+      helper2 :: (IO(Vector Double), Vector Double) -> IO(Sample Double)
+      helper2 (i, v) =  fmap (\ j -> (j,v)) i
 
 ------------------------------------------------------------------------------
 
