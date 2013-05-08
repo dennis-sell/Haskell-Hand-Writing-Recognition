@@ -121,11 +121,11 @@ main = do
     putStrLn "Number of sets in training data? (1-3)"
     tests <- testsGetLoop
     putStrLn "Creating Neural Network"
-    --n <- createNetwork 256 [2560] 26
-    --samples <- processSamples . getSample $ getFileNames person tests
-    --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
-    --putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
-    --purStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
+    n <- createNetwork 256 [2560] 26
+    samples <- processSamples . getSample $ getFileNames person tests
+    n' <- trainNTimes 1000 0.5 tanh tanh' n samples
+    putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
+    putStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
     putStrLn "Done"
 
     where 
