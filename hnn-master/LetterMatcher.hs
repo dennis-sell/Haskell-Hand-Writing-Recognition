@@ -121,11 +121,11 @@ main = do
     putStrLn "Number of sets in training data? (1-3)"
     tests <- testsGetLoop
     putStrLn "Creating Neural Network"
-    n <- createNetwork 256 [2560] 26
-    samples <- processSamples . getSample $ getFileNames person tests
-    n' <- trainNTimes 1000 0.5 tanh tanh' n samples
-    putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
-    putStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
+    --n <- createNetwork 256 [2560] 26
+    --samples <- processSamples . getSample $ getFileNames person tests
+    --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
+    --putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
+    --putStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
     putStrLn "Done"
 
     where 
@@ -140,8 +140,7 @@ main = do
           Just n -> if n <= 4 && n >= 1 then return n else testsGetLoop  
           Nothing -> putStrLn "Is not a valid test number" >> testsGetLoop
       integerOfString :: String -> Maybe Integer
-      integerOfString s = case head s of
-                            '1' -> Just 1
-                            '2' -> Just 2
-                            '3' -> Just 3
-                            _   -> Nothing
+      integerOfString [] = Nothing
+      integerOfString (s:t)
+                        | read [s] > 3 || read [s] < 1  = Nothing
+                        | otherwise                 = Just $ read [s]
