@@ -143,8 +143,6 @@ module AI.HNN.FF.Network
     , quadError
     
     -- * Loading and saving a neural network
-    , loadNetwork
-    , saveNetwork
     ) where
 
 import Codec.Compression.Zlib     (compress, decompress)
@@ -165,9 +163,9 @@ newtype Network a = Network
                  { matrices   :: V.Vector (Matrix a) -- ^ the weight matrices
                  } deriving (Show)
 
-instance (Element a, Binary a) => Binary (Network a) where
+{-instance (Element a, Binary a) => Binary (Network a) where
   put (Network ms) = put ms
-  get = Network `fmap` get                 
+  get = Network `fmap` get  -}                
 
 -- | The type of an activation function, mostly used for clarity in signatures
 type ActivationFunction a = a -> a
@@ -308,7 +306,7 @@ tanh' :: Floating a => a -> a
 tanh' !x = case tanh x of
   s -> 1 - s**2
 {-# INLINE tanh' #-}
-
+{-
 -- | Loading a neural network from a file (uses zlib compression on top of serialization using the binary package).
 --   Will throw an exception if the file isn't there.
 loadNetwork :: (Storable a, Element a, Binary a) => FilePath -> IO (Network a)
@@ -318,4 +316,4 @@ loadNetwork fp = return . decode . decompress =<< B.readFile fp
 -- | Saving a neural network to a file (uses zlib compression on top of serialization using the binary package).
 saveNetwork :: (Storable a, Element a, Binary a) => FilePath -> Network a -> IO ()
 saveNetwork fp net = B.writeFile fp . compress $ encode net
-{-# INLINE saveNetwork #-}
+{-# INLINE saveNetwork #-} -}

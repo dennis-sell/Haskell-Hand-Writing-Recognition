@@ -31,7 +31,7 @@ getByteStringFromFile :: String -> IO (Maybe ByteString)
 getByteStringFromFile x = (getRightM . readBMP $ x) >>= (\c -> case c of
                                 Nothing -> return Nothing
                                 Just y -> return (Just (bmpRawImageData y)))
-
+--return $ fmap bmpRawImageData (getRightM . readBMP $ x)
 
 unpackB :: IO (Maybe ByteString) -> IO (Maybe [Word8])
 unpackB = fmap (fmap unpack)

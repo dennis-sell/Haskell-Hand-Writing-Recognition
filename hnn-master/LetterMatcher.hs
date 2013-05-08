@@ -6,6 +6,8 @@ import Data.Char
 import Data.String
 --import Data.ByteString
 import Data.Word
+import AI.HNN.FF.Network
+import Numeric.LinearAlgebra
 
 data Person = D
             | R
