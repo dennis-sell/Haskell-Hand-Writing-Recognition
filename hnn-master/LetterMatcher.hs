@@ -5,7 +5,6 @@ import Control.Monad
 import Data.Char
 import Data.String
 import qualified Data.Vector as V
---import Data.ByteString
 import Data.Word
 import Data.Maybe
 import AI.HNN.FF.Network 
@@ -75,7 +74,7 @@ processSamples = sequence . map (helper2 . helper)
     where
       helper :: (IO(Maybe [Double]), [Double] ) -> (IO(Vector Double), Vector Double)
       helper s = mapBoth (fmap (fromList . fromJust)) fromList s
-                                                    -- IO(Sample Double) = IO((Vector Double, Vector Double))
+        -- A note on types : IO(Sample Double) = IO((Vector Double, Vector Double))
       helper2 :: (IO(Vector Double), Vector Double) -> IO(Sample Double)
       helper2 (i, v) =  fmap (\ j -> (j,v)) i
 
