@@ -5,7 +5,6 @@ import Control.Monad
 import Data.Char
 import Data.String
 import qualified Data.Vector as V
---import Data.ByteString
 import Data.Word
 import Data.Maybe
 import AI.HNN.FF.Network 
@@ -107,7 +106,7 @@ processSamples = sequence . map (helper2 . helper)
     where
       helper :: (IO(Maybe [Double]), [Double] ) -> (IO(Vector Double), Vector Double)
       helper s = mapBoth (fmap (fromList . fromJust)) fromList s
-                                                    -- IO(Sample Double) = IO((Vector Double, Vector Double))
+        -- A note on types : IO(Sample Double) = IO((Vector Double, Vector Double))
       helper2 :: (IO(Vector Double), Vector Double) -> IO(Sample Double)
       helper2 (i, v) =  fmap (\ j -> (j,v)) i
 
@@ -122,11 +121,11 @@ main = do
     putStrLn "Number of sets in training data? (1-3)"
     tests <- testsGetLoop
     putStrLn "Creating Neural Network"
-    --n <- createNetwork 256 [2560] 26
-    --samples <- processSamples . getSample $ getFileNames person tests
-    --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
-    --putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
-    --purStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
+    n <- createNetwork 256 [2560] 26
+    samples <- processSamples . getSample $ getFileNames person tests
+    n' <- trainNTimes 1000 0.5 tanh tanh' n samples
+    putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
+    putStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
     putStrLn "Done"
 
     where 
