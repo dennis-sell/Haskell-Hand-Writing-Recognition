@@ -153,7 +153,7 @@ import Foreign.Storable           (Storable)
 import qualified Data.ByteString.Lazy  as B
 import qualified Data.Vector           as V
 
-import System.Random.MWC
+import qualified System.Random.MWC as S
 import Numeric.LinearAlgebra
 
 -- | Our feed-forward neural network type. Note the 'Binary' instance, which means you can use 
@@ -179,15 +179,15 @@ type ActivationFunctionDerivative a = a -> a
 -- 'System.Random.MWC.uniformVector'.
 -- 
 -- > createNetwork n l k
-createNetwork :: (Variate a, Storable a) => Int -> [Int] -> Int -> IO (Network a)
+createNetwork :: (S.Variate a, Storable a) => Int -> [Int] -> Int -> IO (Network a)
 createNetwork nInputs hiddens nOutputs =
-  fmap Network $ withSystemRandom . asGenST $ \gen -> go gen dimensions V.empty
+  fmap Network $ S.withSystemRandom . S.asGenST $ \gen -> go gen dimensions V.empty
   where
         go _ [] !ms         = return ms
         go gen ((!n,!m):ds) ms = do
           !mat <- randomMat n m gen
           go gen ds (ms `V.snoc` mat)
-        randomMat n m g = reshape m `fmap` uniformVector g (n*m)
+        randomMat n m g = reshape m `fmap` S.uniformVector g (n*m)
         dimensions      = zip (hiddens ++ [nOutputs]) $
                               (nInputs+1 : hiddens)
 {-# INLINE createNetwork #-}
