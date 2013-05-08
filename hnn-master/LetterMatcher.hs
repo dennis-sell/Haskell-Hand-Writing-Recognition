@@ -21,26 +21,24 @@ stringToPerson s
             | s == "DR" = Just DR
             | otherwise = Nothing
 
+chars = ['a'..'z']
+
+sets :: Integer -> String
+sets i = map (chr . fromIntegral . (+48)) [1..i]
+
 getFileNames :: Person -> Integer -> [(String, Char)]
 getFileNames p s  = [(name ++ (letter : set : ".bmp"), letter) |
-                            name <- names p, set <- sets, letter <- chars]
+                            name <- names p, set <- sets s, letter <- chars]
     where
-        sets = map (chr . fromIntegral . (+48)) [1..s]
-        chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m']
-             ++ ['n','o','p','q','r','s','t','u','v','w','x','y','z']
         names D = ["Dennis/d"]
         names R = ["Richie/r"]
         names DR = ["Dennis/d", "Richie/r"]
 
 getFileNamesStyle :: Integer -> [(String, Person)]
 getFileNamesStyle s  = [("Dennis/d" ++ (letter : set : ".bmp"), D) |
-                            set <- sets, letter <- chars] ++ 
+                            set <- sets s, letter <- chars] ++ 
                        [("Richie/r" ++ (letter : set : ".bmp"), R) |
-                            set <- sets, letter <- chars]
-    where
-        sets = map (chr . fromIntegral . (+48)) [1..s]
-        chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m']
-             ++ ['n','o','p','q','r','s','t','u','v','w','x','y','z']
+                            set <- sets s, letter <- chars]
 
 mapBoth :: (a -> c) -> (b -> d) -> (a,b) -> (c,d)
 mapBoth f g (fir,sec) = (f fir, g sec) 
