@@ -110,22 +110,26 @@ processSamples = sequence . map (helper2 . helper)
       helper2 :: (IO(Vector Double), Vector Double) -> IO(Sample Double)
       helper2 (i, v) =  fmap (\ j -> (j,v)) i
 
+getOnlyPictureData str = (fmap (fromList . fromJust)) . getSample $ str
 ------------------------------------------------------------------------------
 
 --main contains the interface that allows the user to choose what data to train
 --a Neural Network with, and what data to test against that Neural Network
 main :: IO ()
 main = do
-    putStrLn "Person?"
+putStrLn "Person?"
     person <- personGetLoop
     putStrLn "Number of sets in training data? (1-3)"
     tests <- testsGetLoop
     putStrLn "Creating Neural Network"
-    n <- createNetwork 256 [2560] 26
-    --samples <- processSamples . getSamples $ getFileNames person tests
-    --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
-    --putStrLn . show . output n' tanh . processSamples . getSample $ "Dennis/da4.bmp"
-    --putStrLn . show . output n' tanh . processSamples . getSample $ "Richie/rq4.bmp"
+    n <- createNetwork 256 [2560] 26 :: IO(Network Double)
+    putStrLn "Getting Samples..."
+    samples <-  processSamples . getSamples $ getFileNames person tests
+    putStrLn "Training"
+    n' <- return $ trainNTimes 1000 0.5 tanh tanh' n  samples
+    putStrLn "Testing"
+    fmap (show . toList . output n' tanh) ( getOnlyPictureData  "Richie/rh1.bmp") -- >>= print
+    --output n' tanh . processSamples . getSample $ "rq4.bmp"
     putStrLn "Done"
 
     where 
