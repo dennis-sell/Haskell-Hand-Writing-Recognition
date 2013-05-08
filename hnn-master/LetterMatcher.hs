@@ -6,6 +6,7 @@ import Data.Char
 import Data.String
 --import Data.ByteString
 import Data.Word
+import Data.Maybe
 import AI.HNN.FF.Network 
 import Numeric.LinearAlgebra
 
@@ -30,16 +31,6 @@ sets :: Integer -> String
 sets i = map (chr . fromIntegral . (+48)) [1..i]
 
 
-{-processSamples :: [(IO(Maybe [Double]), [Double] )] -> [IO(Samples Double)]
-processSamples = sequence . helper
-    where
-        helper :: [(IO(Maybe [Double]), [Double] )] -> [IO([Double], [Double])]
-        helper ((m (picInfo, expected)):xs) = case picInfo of
-                                            Nothing -> helper xs
-                                            Just p  -> return (p,expected : helper xs -}
-
-
-
 -------------- Letter Recognition --------------------------------------------
 
 getFileNames :: Person -> Integer -> [(String, Char)]
@@ -56,9 +47,8 @@ charToVector c = (replicate (numLetter - 1) 0) ++ [1]
     where
         numLetter = Data.Char.ord c - 96 
 
-getSamples :: Person -> Integer -> [(IO(Maybe [Double]), [Double] )]
-getSamples p i = map (mapBoth getSample charToVector) files 
-      where files = getFileNames p i
+getSamples :: [(String, Char)] -> [(IO(Maybe [Double]), [Double] )]
+getSamples = map (mapBoth getSample charToVector)
 
 -------------- Style Recognition ---------------------------------------------
 
@@ -73,9 +63,20 @@ personToVector D = [1,0]
 personToVector R = [0,1]
 personToVector _ = [0,0]
 
-getStyleSamples :: Integer -> [(IO(Maybe [Double]), [Double] )]
-getStyleSamples i = map (mapBoth getSample personToVector) files 
-    where files = getFileNamesStyle i
+getStyleSamples :: [(String, Person)] -> [(IO(Maybe [Double]), [Double] )]
+getStyleSamples = map (mapBoth getSample personToVector)
+
+-------------- Processing ----------------------------------------------------
+
+{-
+processSamples :: [(IO(Maybe [Double]), [Double] )] -> IO(Samples Double)
+processSamples = sequence . fromJust . filter isJust . map helper
+    where
+      helper :: (IO(Maybe [Double]), [Double] ) -> Maybe IO(Sample Double)
+      helper (picInfo, expected) = if isJust picInfo then return (fromList picInfo, fromList expected) else Nothing >>= \info -> 
+                        case info of
+                          Nothing -> helper xs
+                          Just p  -> return (fromList p, fromList expected) : helper xs -}
 
 ------------------------------------------------------------------------------
 
@@ -87,8 +88,9 @@ main = do
     tests <- testsGetLoop
     putStrLn "Creating Neural Network"
     --n <- createNetwork 256 [2560] 26
-    --samples <- processSamples $ getSample person tests
-    --let n' = trainNTimes 1000 0.5 tanh tanh' n samples
+    --samples <- processSamples . getSample $ getFileNames person tests
+    --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
+    --putStrLn . show . output n' tanh . processSamples . getSample $ ['a', "da1.bmp"]
     putStrLn "Done"
 
     where 
