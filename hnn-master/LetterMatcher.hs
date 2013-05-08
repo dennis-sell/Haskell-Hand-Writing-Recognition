@@ -91,7 +91,8 @@ main = do
     --n <- createNetwork 256 [2560] 26
     --samples <- processSamples . getSample $ getFileNames person tests
     --n' <- trainNTimes 1000 0.5 tanh tanh' n samples
-    --putStrLn . show . output n' tanh . processSamples . getSample $ ['a', "da1.bmp"]
+    --putStrLn . show . output n' tanh . processSamples . getSample $ "da4.bmp"
+    --purStrLn . show . output n' tanh . processSamples . getSample $ "rq4.bmp"
     putStrLn "Done"
 
     where 
@@ -111,3 +112,4 @@ main = do
                             '2' -> Just 2
                             '3' -> Just 3
                             _   -> Nothing
+
