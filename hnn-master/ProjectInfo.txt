@@ -2,7 +2,7 @@ CIS194: Haskell Final Project
 
 Names: Dennis Sell, Richard Roberts
 
-Goal: Letter recognition:; Given samples of different, known letters of the 
+Goal: Letter recognition: Given samples of different, known letters of the 
 alphabet and an image representing an unknown letter, can a program determine 
 what letter is written? 
 
@@ -34,10 +34,13 @@ resolution of the images was scaled down. Then, using Adobe Photoshop, we
 individually removed each letter from the grid, scaled it down to fit the 
 16x16 image, and ran a threshold on the letter to ensure that each pixel was
 either black or white. Given the fact that each of us provided four full
-alphabets, this was a very time consuming task. However, we feel that this was
+alphabets, this was an extremely time consuming task. However, we feel that this was
 worth the time commitment. The letters seem much closer to their unedited
 counterparts, and we were able to maintain a level of consistency with each letter
 in terms of size and position that is necessary in a project such as this.
+However, the tablet route has its benefits as well. Shorter times lead to a
+greater output of letters, which provides a much larger sample set to train
+a Neural Network with. 
 
 Once the letter images were created, we had to process them using Haskell. We
 decided to use Codec.BMP to do so. Codec.BMP allowed to obtain a String representation
