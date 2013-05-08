@@ -30,9 +30,7 @@ getLeftM  x = x >>= (\c -> case c of
 --getByteStringFromFile takes a bmp image's Filepath as a string and returns
 --a Maybe of the Bytestring representation of the file wrapped in IO
 getByteStringFromFile :: String -> IO (Maybe ByteString)
-getByteStringFromFile x = (getRightM . readBMP $ x) >>= (\c -> case c of
-                                Nothing -> return Nothing
-                                Just y -> return (Just (bmpRawImageData y)))
+getByteStringFromFile x = fmap (fmap bmpRawImageData) (getRightM . readBMP $ x) 
 
 
 --unpackB takes in a Maybe Bytstring representation of a file wrapped in IO
